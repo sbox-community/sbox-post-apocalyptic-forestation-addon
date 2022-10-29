@@ -1,0 +1,78 @@
+{
+  "Title": "Post Apocalyptic Forestation",
+  "Type": "addon",
+  "Org": "alphaceph",
+  "Ident": "forestation",
+  "Tags": "post apocalyptic forestation, post, apocalyptic, forestation, forest, tree, grass, bush, flower, reed, ivy, rock, debris, sbox.community",
+  "Schema": 1,
+  "HasAssets": false,
+  "AssetsPath": "",
+  "ResourcePaths": null,
+  "HasCode": true,
+  "CodePath": "/code/",
+  "RootNamespace": null,
+  "Metadata": {
+    "ParentPackage": "",
+    "PackageSettings": [
+      {
+        "DisplayType": "Boolean",
+        "Choices": [],
+        "ConVarName": "sv_paf_autogenerate",
+        "DisplayName": "Auto-Generate Forest (PA Forestation)",
+        "DefaultValue": "true",
+        "Description": "Auto generation of post apocalyptic forestation",
+        "Group": ""
+      },
+      {
+        "DisplayType": "Integer",
+        "Choices": [],
+        "ConVarName": "sv_paf_treeamount",
+        "DisplayName": "Tree Amount (PA Forestation)",
+        "DefaultValue": "1000",
+        "Description": "Maximum tree amount of post apocalyptic forestation",
+        "Group": "",
+        "Maximum": 5000
+      },
+      {
+        "DisplayType": "Integer",
+        "Choices": [],
+        "ConVarName": "sv_paf_rockamount",
+        "DisplayName": "Rock Amount (PA Forestation)",
+        "DefaultValue": "100",
+        "Description": "Maximum rock amount of post apocalyptic forestation",
+        "Group": "",
+        "Maximum": 500
+      },
+      {
+        "DisplayType": "Integer",
+        "Choices": [],
+        "ConVarName": "sv_paf_grassamount",
+        "DisplayName": "Grass Amount (PA Forestation)",
+        "DefaultValue": "5000",
+        "Description": "Maximum grass amount of post apocalyptic forestation",
+        "Group": "",
+        "Maximum": 6000
+      },
+      {
+        "DisplayType": "Integer",
+        "Choices": [],
+        "ConVarName": "sv_paf_ivyamount",
+        "DisplayName": "Ivy Amount (PA Forestation)",
+        "DefaultValue": "2000",
+        "Description": "Maximum ivy amount of post apocalyptic forestation",
+        "Group": "",
+        "Maximum": 3000
+      },
+      {
+        "DisplayType": "Integer",
+        "Choices": [],
+        "ConVarName": "sv_paf_debrisamount",
+        "DisplayName": "Debris Amount (PA Forestation)",
+        "DefaultValue": "1000",
+        "Description": "Maximum debris amount of post apocalyptic forestation",
+        "Group": "",
+        "Maximum": 1000
+      }
+    ]
+  }
+}
