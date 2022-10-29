@@ -9,12 +9,12 @@
 // Enhancement of map compatibility
 
 using Sandbox;
-using System.Collections.Generic;
-using System.Linq;
-using static Sandbox.Event.Entity;
-using System.Threading.Tasks;
-using System.IO;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using static Sandbox.Event.Entity;
 
 public partial class PostApocalypticForestation
 {
@@ -213,7 +213,7 @@ public partial class PostApocalypticForestation
 		if ( Host.IsClient )
 			ClientJoinedHandler();
 
-		Log.Info( $"[sbox.community] Post Apocalyptic Forestation is loaded!, Auto-generation is {(autoGeneration?"enable":"disable")}" );
+		Log.Info( $"[sbox.community] Post Apocalyptic Forestation is loaded!, Auto-generation is {(autoGeneration ? "enable" : "disable")}" );
 	}
 
 	private static void applyEffects()
@@ -251,7 +251,7 @@ public partial class PostApocalypticForestation
 		applyEffects();
 	}
 
-	private static async Task SpawnGrasses_thread(int maxray, int amount, List<Vector3> hitpositions, List<Vector3> hitnormals )
+	private static async Task SpawnGrasses_thread( int maxray, int amount, List<Vector3> hitpositions, List<Vector3> hitnormals )
 	{
 		var mapbounds = Map.Physics.Body.GetBounds();
 		var mapheight = Map.Physics.Body.GetBounds().Size.z;
@@ -331,23 +331,23 @@ public partial class PostApocalypticForestation
 		List<Vector3> hitpositions = new();
 		List<Vector3> hitnormals = new();
 
-		await SpawnGrasses_thread( grassAmount * 10, grassAmount, hitpositions , hitnormals);
+		await SpawnGrasses_thread( grassAmount * 10, grassAmount, hitpositions, hitnormals );
 
 		var count = hitpositions.Count;
 
-		for (var i=0; i< count; i++)
+		for ( var i = 0; i < count; i++ )
 		{
 			if ( _debug )
 				Log.Info( "Preparing grass; " + hitpositions[i] );
 
 			doneGrasses.Add( new EntInfo()
 			{
-				Model = i < count * 0.9f ? Rand.FromArray( GrassModels ) : Rand.FromArray( (Rand.Int(1,2) == 1) ? BushModels : ((Rand.Int(1, 2) == 1) ? FlowerModels : ReedModels)),
+				Model = i < count * 0.9f ? Rand.FromArray( GrassModels ) : Rand.FromArray( (Rand.Int( 1, 2 ) == 1) ? BushModels : ((Rand.Int( 1, 2 ) == 1) ? FlowerModels : ReedModels) ),
 				Scale = Rand.Float( i < count * 0.9f ? 0.7f : 0.4f, i < count * 0.9f ? 1.2f : 0.8f ),
 				Position = hitpositions[i],
-				Rotation = Rotation.LookAt( hitnormals[i] + Vector3.Random * 0.2f, Vector3.Random ) * Rotation.From( 90, 0, 0 ),
+				Rotation = Rotation.LookAt( hitnormals[i] + Vector3.Random * 0.1f, Vector3.Random ) * Rotation.From( 90, 0, 0 ),
 				RenderColor = Color.Lerp( "#4c5610", "#c79852", Rand.Float( 0.0f, 1f ) ),
-			});
+			} );
 		}
 
 		SendGrasses( To.Everyone );
@@ -367,9 +367,9 @@ public partial class PostApocalypticForestation
 				{
 					writer.Write( item.Model );
 					writer.Write( item.Scale.ToString() ); //float problem?
-					writer.Write( item.Position.ToString());
+					writer.Write( item.Position.ToString() );
 					writer.Write( item.Rotation.ToString() );
-					writer.Write( item.RenderColor.ToString(true,true) );
+					writer.Write( item.RenderColor.ToString( true, true ) );
 				}
 
 				SendGrassesToCL( to, stream.ToArray() );
@@ -396,10 +396,10 @@ public partial class PostApocalypticForestation
 				for ( var i = 0; i < count; i++ )
 				{
 					var model = reader.ReadString();
-					var scale = float.Parse(reader.ReadString());
-					var position = Vector3.Parse(reader.ReadString());
-					var rotation = Rotation.Parse(reader.ReadString());
-					var rendercolor = Color.Parse(reader.ReadString());
+					var scale = float.Parse( reader.ReadString() );
+					var position = Vector3.Parse( reader.ReadString() );
+					var rotation = Rotation.Parse( reader.ReadString() );
+					var rendercolor = Color.Parse( reader.ReadString() );
 
 					var ent = new ModelEntity();
 					ent.Model = Model.Load( model );
@@ -437,10 +437,6 @@ public partial class PostApocalypticForestation
 			var angle = Vector3.Down * mapheight;
 			angle += randomPoint;
 
-			//z-axis for sky checking
-			var angleSky = Vector3.Up * mapheight * 10;
-			angleSky += randomPoint;
-
 			//z-axis for underground space checking
 			//var angleGround = Vector3.Down * 15f;
 			//angle += CurrentView.Rotation.Forward;
@@ -449,7 +445,7 @@ public partial class PostApocalypticForestation
 			var tr = Trace.Ray( randomPoint, angle )
 				.WorldOnly()
 				.Size( new Vector3( 5, 5, 25 ) )//to detect small areas
-				.Radius( 150f )//to detect small areas
+												//.Radius( 150f )
 				.Run();
 
 			if ( !tr.Hit )
@@ -459,11 +455,11 @@ public partial class PostApocalypticForestation
 				Log.Info( "Hit.." );
 
 			//Sky checking
-			var trSky = Trace.Ray( randomPoint, angleSky )
+			var trSky = Trace.Ray( tr.HitPosition, tr.HitPosition + (Vector3.Up * mapheight) )
 				.WorldOnly()
 				.Run();
 
-			if ( trSky.Hit )
+			if ( trSky.Hit && !Trace.TestPoint( trSky.HitPosition, "passbullets", 100f ) )
 				continue;
 
 			if ( _debug )
@@ -512,7 +508,7 @@ public partial class PostApocalypticForestation
 			spawnedTrees.Add( ent );
 		}
 
-		Log.Info( $"[PAF-SV] Created {treeAmount} trees!" );
+		Log.Info( $"[PAF-SV] Created {spawnedTrees.Count} trees!" );
 
 	}
 
@@ -538,7 +534,7 @@ public partial class PostApocalypticForestation
 			angle += randomPoint;
 
 			//z-axis for sky checking
-			var angleSky = Vector3.Up * mapheight * 10;
+			var angleSky = Vector3.Up * mapheight;
 			angleSky += randomPoint;
 
 			//z-axis for underground space checking
@@ -549,7 +545,7 @@ public partial class PostApocalypticForestation
 			var tr = Trace.Ray( randomPoint, angle )
 				.WorldOnly()
 				.Size( new Vector3( 5, 5, 25 ) )//to detect small areas
-				.Radius( 150f )//to detect small areas
+												//.Radius( 150f )
 				.Run();
 
 			if ( !tr.Hit )
@@ -559,11 +555,11 @@ public partial class PostApocalypticForestation
 				Log.Info( "Hit.." );
 
 			//Sky checking
-			var trSky = Trace.Ray( randomPoint, angleSky )
+			var trSky = Trace.Ray( tr.HitPosition, tr.HitPosition + (Vector3.Up * mapheight) )
 				.WorldOnly()
 				.Run();
 
-			if ( trSky.Hit )
+			if ( trSky.Hit && !Trace.TestPoint( trSky.HitPosition, "passbullets", 100f ) )
 				continue;
 
 			if ( _debug )
@@ -601,12 +597,13 @@ public partial class PostApocalypticForestation
 
 		}
 
-		Log.Info( $"[PAF-SV] Created {rockAmount} rocks!" );
+		Log.Info( $"[PAF-SV] Created {spawnedRocks.Count} rocks!" );
 	}
 
 	private static async Task SpawnIvys_thread( int maxray, int amount, List<Vector3> hitpositions, List<Vector3> hitnormals )
 	{
 		var mapbounds = Map.Physics.Body.GetBounds();
+		var mapheight = Map.Physics.Body.GetBounds().Size.z;
 
 		var founded = 0;
 		int delaystep = 500; //batch
@@ -631,11 +628,13 @@ public partial class PostApocalypticForestation
 
 			var randomPoint = mapbounds.RandomPointInside;
 
-			var angle = Vector3.Down * 0.5f;//Vector3.Random + Vector3.Down * 0.5f;
-			angle += randomPoint;
+			//z-axis for sky checking
+			var angleSky = Vector3.Up * mapheight;
+			angleSky += randomPoint;
 
 			//Ground checking
-			var tr = Trace.Ray( randomPoint, randomPoint + angle * 1000 )
+			var tr = Trace.Ray( randomPoint, randomPoint * Vector3.Random * mapheight )
+				.WithoutTags( "passbullets" )
 				.WorldOnly()
 				.Run();
 
@@ -644,6 +643,13 @@ public partial class PostApocalypticForestation
 
 			if ( _debug )
 				Log.Info( "Hit.." );
+
+			//Sky checking
+			if ( Trace.TestPoint( tr.HitPosition, "passbullets", 100f ) )
+				continue;
+
+			if ( _debug )
+				Log.Info( "Sky not detected.." );
 
 			//Angles checking for spawning vertically
 			if ( tr.Normal.Angle( Vector3.Up ) < 25.0f )
@@ -771,7 +777,7 @@ public partial class PostApocalypticForestation
 		var mapheight = Map.Physics.Body.GetBounds().Size.z;
 
 		var founded = 0;
-		int delaystep = 500; //batch
+		int delaystep = 10000; //batch
 		int delaycount = 0;
 
 		for ( int i = 0; i < maxray; i++ )
@@ -797,13 +803,8 @@ public partial class PostApocalypticForestation
 			var angle = Vector3.Down * mapheight;
 			angle += randomPoint;
 
-			//z-axis for sky checking
-			var angleSky = Vector3.Up * mapheight * 10;
-			angleSky += randomPoint;
-
-
 			//Ground checking
-			var tr = Trace.Ray( randomPoint, randomPoint + angle * 1000 )
+			var tr = Trace.Ray( randomPoint, angle )
 				.WorldOnly()
 				.Run();
 
@@ -814,11 +815,17 @@ public partial class PostApocalypticForestation
 				Log.Info( "Hit.." );
 
 			//Sky checking
-			var trSky = Trace.Ray( randomPoint, angleSky )
+			var trSky = Trace.Ray( tr.HitPosition, tr.HitPosition + (Vector3.Up * mapheight) )
 				.WorldOnly()
 				.Run();
 
 			if ( !trSky.Hit )
+				continue;
+
+			//Log.Info( (tr.HitPosition) + " " + (tr.HitPosition + (Vector3.Up * mapheight)));
+			//Log.Info( trSky.HitPosition );
+			//Sky checking
+			if ( Trace.TestPoint( trSky.HitPosition, "passbullets", 100f ) )
 				continue;
 
 			if ( _debug )
@@ -864,7 +871,7 @@ public partial class PostApocalypticForestation
 		List<Vector3> hitpositions = new();
 		List<Vector3> hitnormals = new();
 
-		await SpawnDebris_thread( debrisAmount * 10, debrisAmount, hitpositions, hitnormals );
+		await SpawnDebris_thread( debrisAmount * 1000, debrisAmount, hitpositions, hitnormals );
 
 		var count = hitpositions.Count;
 
@@ -878,7 +885,7 @@ public partial class PostApocalypticForestation
 				Model = Rand.FromArray( DebrisModels ),
 				Scale = Rand.Float( 0.8f, 1.2f ),
 				Position = hitpositions[i],
-				Rotation = Rotation.LookAt( hitnormals[i] + Vector3.Random * 0.1f, Vector3.Random ) * Rotation.From( 90, 0, 0 ), 
+				Rotation = Rotation.LookAt( hitnormals[i] + Vector3.Random * 0.1f, Vector3.Random ) * Rotation.From( 90, 0, 0 ),
 				RenderColor = Color.Lerp( "#4c5610", "#c79852", Rand.Float( 0.0f, 1f ) ),
 			} );
 		}
@@ -966,21 +973,21 @@ public partial class PostApocalypticForestation
 	{
 		var ratio = (Map.Physics.Body.GetBounds().Size.x * Map.Physics.Body.GetBounds().Size.y) / 130347680f; //based construct map
 
-		if (Host.IsServer)
+		if ( Host.IsServer )
 			Log.Info( $"[PAF] Map scale calculated as {ratio}" );
 
 		ratio += 0.1f; //boosted
 
-		treeAmount = Math.Min((int) (1000 * ratio), 5000);
-		rockAmount  = Math.Min( (int)(100 * ratio), 500 );
-		grassAmount  = Math.Min( (int)(5000 * ratio), 6000 );
-		ivyAmount  = Math.Min( (int)(2000 * ratio), 3000 );
+		treeAmount = Math.Min( (int)(1000 * ratio), 5000 );
+		rockAmount = Math.Min( (int)(100 * ratio), 500 );
+		grassAmount = Math.Min( (int)(5000 * ratio), 6000 );
+		ivyAmount = Math.Min( (int)(2000 * ratio), 3000 );
 		debrisAmount = Math.Min( (int)(1000 * ratio), 1000 );
 
 		if ( Host.IsServer )
 			Log.Info( $"[PAF] Calculated as Sufficiently for '{Map.Name}'; Tree: {treeAmount}, Rock: {rockAmount}, Grass: {grassAmount}, Ivy: {ivyAmount}, Debris: {debrisAmount}" );
 
-		if (Host.IsServer && autoGeneration )
+		if ( Host.IsServer && autoGeneration )
 			SpawnForest();
 	}
 
@@ -1023,11 +1030,11 @@ public partial class PostApocalypticForestation
 		if ( defaultAmbientColor is not null )
 			Map.Scene.AmbientLightColor = defaultAmbientColor.GetValueOrDefault();
 
-		clearForestCL(To.Everyone, grasses: true, ivys: true, debris: true, effects: true);
+		clearForestCL( To.Everyone, grasses: true, ivys: true, debris: true, effects: true );
 	}
 
 	[ClientRpc]
-	public static void clearForestCL( bool grasses= false, bool ivys = false, bool debris = false, bool effects = false)
+	public static void clearForestCL( bool grasses = false, bool ivys = false, bool debris = false, bool effects = false )
 	{
 		if ( grasses && spawnedGrasses != null )
 		{
@@ -1059,7 +1066,7 @@ public partial class PostApocalypticForestation
 			spawnedDebris.Clear();
 		}
 
-		if( effects )
+		if ( effects )
 		{
 			if ( defaultFog is not null )
 				Map.Scene.GradientFog = defaultFog.GetValueOrDefault();
@@ -1072,13 +1079,13 @@ public partial class PostApocalypticForestation
 	// Events and game's overrides can't accessible?
 
 	[ConCmd.Server]
-	public static void ClientJoinedHandler() 
+	public static void ClientJoinedHandler()
 	{
 		var client = ConsoleSystem.Caller;
-		
+
 		if ( spamProtect.TryGetValue( client.PlayerId, out var cl ) )
 		{
-			if (cl.Equals(client))
+			if ( cl.Equals( client ) )
 				return;
 			else
 			{
@@ -1098,7 +1105,7 @@ public partial class PostApocalypticForestation
 	[Event.Frame]
 	public static void ClientJoinedHandlerCL()
 	{
-		if( !joinedCL )
+		if ( !joinedCL )
 		{
 			joinedCL = true;
 			ClientJoinedHandler();

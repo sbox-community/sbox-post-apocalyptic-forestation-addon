@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "d:\\steamlibrary\\steamapps\\common\\sbox\\addons\\forestation\\code\\forestation.csproj",
+      "projectUniqueName": "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\sbox-post-apocalyptic-forestation-addon\\code\\forestation.csproj",
       "projectName": "forestation",
-      "projectPath": "d:\\steamlibrary\\steamapps\\common\\sbox\\addons\\forestation\\code\\forestation.csproj",
+      "projectPath": "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\sbox-post-apocalyptic-forestation-addon\\code\\forestation.csproj",
       "packagesPath": "C:\\Users\\bypolat\\.nuget\\packages\\",
-      "outputPath": "d:\\steamlibrary\\steamapps\\common\\sbox\\addons\\forestation\\code\\obj\\",
+      "outputPath": "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\sbox-post-apocalyptic-forestation-addon\\code\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "H:\\visualstudio_diger\\Shared\\NuGetPackages"
