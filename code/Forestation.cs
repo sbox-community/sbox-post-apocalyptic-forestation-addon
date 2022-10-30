@@ -1,6 +1,4 @@
-﻿
-
-// Further possible enhancements;
+﻿// Further possible enhancements;
 //
 // Particle birds, forest ambients, soundscapes and sunrays
 // water surfaces can have moss
@@ -182,7 +180,6 @@ public partial class PostApocalypticForestation
 	{
 		"models/rust_props/concrete_debris/concrete_debris_a.vmdl",
 		"models/rust_props/concrete_debris/concrete_debris_b.vmdl",
-		"models/rust_props/concrete_debris/concrete_debris_c.vmdl",
 		"models/rust_props/small_junk/bottle_cluster_a.vmdl",
 		"models/rust_props/small_junk/bottle_cluster_b.vmdl",
 		"models/rust_props/small_junk/bottle_cluster_c.vmdl",
@@ -196,6 +193,7 @@ public partial class PostApocalypticForestation
 		"models/rust_props/small_junk/ground_junk_straight_a.vmdl",
 		"models/rust_props/small_junk/jar_cluster_a.vmdl",
 		"models/rust_props/small_junk/jar_cluster_b.vmdl"
+		//"models/rust_props/concrete_debris/concrete_debris_c.vmdl",
 		//"models/rust_props/small_junk/milk_carton_cluster_a.vmdl",
 	};
 
@@ -292,8 +290,9 @@ public partial class PostApocalypticForestation
 			if ( _debug )
 				Log.Info( "Hit.." );
 
+
 			//Water checking
-			if ( Trace.TestPoint( tr.HitPosition, "water", 10f ) )
+			if ( Trace.TestPoint( tr.HitPosition, "water", 10f ) || tr.Tags.Any( x => x == "<invalid>" ) )
 				continue;
 
 			if ( _debug )
@@ -331,7 +330,8 @@ public partial class PostApocalypticForestation
 		List<Vector3> hitpositions = new();
 		List<Vector3> hitnormals = new();
 
-		await SpawnGrasses_thread( grassAmount * 10, grassAmount, hitpositions, hitnormals );
+		//await GameTask.RunInThreadAsync( () => { _ = SpawnGrasses_thread( grassAmount * 10, grassAmount, hitpositions, hitnormals ); } );
+		await SpawnGrasses_thread( grassAmount * 20, grassAmount, hitpositions, hitnormals );
 
 		var count = hitpositions.Count;
 
@@ -537,10 +537,6 @@ public partial class PostApocalypticForestation
 			var angleSky = Vector3.Up * mapheight;
 			angleSky += randomPoint;
 
-			//z-axis for underground space checking
-			//var angleGround = Vector3.Down * 15f;
-			//angle += CurrentView.Rotation.Forward;
-
 			//Ground checking
 			var tr = Trace.Ray( randomPoint, angle )
 				.WorldOnly()
@@ -645,7 +641,7 @@ public partial class PostApocalypticForestation
 				Log.Info( "Hit.." );
 
 			//Sky checking
-			if ( Trace.TestPoint( tr.HitPosition, "passbullets", 100f ) )
+			if ( Trace.TestPoint( tr.HitPosition, "passbullets", 100f ) || tr.Tags.Any( x => x == "<invalid>" ) )
 				continue;
 
 			if ( _debug )
@@ -683,6 +679,7 @@ public partial class PostApocalypticForestation
 		List<Vector3> hitpositions = new();
 		List<Vector3> hitnormals = new();
 
+		//await GameTask.RunInThreadAsync( () => { _ = SpawnIvys_thread( ivyAmount * 10, ivyAmount, hitpositions, hitnormals ); } );
 		await SpawnIvys_thread( ivyAmount * 10, ivyAmount, hitpositions, hitnormals );
 
 		var count = hitpositions.Count;
@@ -822,10 +819,8 @@ public partial class PostApocalypticForestation
 			if ( !trSky.Hit )
 				continue;
 
-			//Log.Info( (tr.HitPosition) + " " + (tr.HitPosition + (Vector3.Up * mapheight)));
-			//Log.Info( trSky.HitPosition );
 			//Sky checking
-			if ( Trace.TestPoint( trSky.HitPosition, "passbullets", 100f ) )
+			if ( Trace.TestPoint( trSky.HitPosition, "passbullets", 100f ) || tr.Tags.Any( x => x == "<invalid>" ) )
 				continue;
 
 			if ( _debug )
@@ -871,6 +866,7 @@ public partial class PostApocalypticForestation
 		List<Vector3> hitpositions = new();
 		List<Vector3> hitnormals = new();
 
+		//await GameTask.RunInThreadAsync( () => { _ = SpawnDebris_thread( debrisAmount * 1000, debrisAmount, hitpositions, hitnormals ); } );
 		await SpawnDebris_thread( debrisAmount * 1000, debrisAmount, hitpositions, hitnormals );
 
 		var count = hitpositions.Count;
@@ -976,7 +972,7 @@ public partial class PostApocalypticForestation
 		if ( Host.IsServer )
 			Log.Info( $"[PAF] Map scale calculated as {ratio}" );
 
-		ratio += 0.1f; //boosted
+		ratio += 0.1f; //boost
 
 		treeAmount = Math.Min( (int)(1000 * ratio), 5000 );
 		rockAmount = Math.Min( (int)(100 * ratio), 500 );
