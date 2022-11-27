@@ -3,26 +3,20 @@
   "Type": "addon",
   "Org": "alphaceph",
   "Ident": "forestation",
-  "Tags": "post apocalyptic forestation, post, apocalyptic, forestation, forest, tree, grass, bush, flower, reed, ivy, rock, debris, sbox.community",
+  "Tags": "runtime,entity,post, apocalyptic, forestation, forest, tree, grass, bush, flower, reed, ivy, rock, debris",
   "Schema": 1,
-  "HasAssets": false,
+  "HasAssets": true,
   "AssetsPath": "",
-  "ResourcePaths": null,
+  "ResourcePaths": [
+    "/materials/*",
+    "/sounds/*"
+  ],
   "HasCode": true,
   "CodePath": "/code/",
   "RootNamespace": null,
   "Metadata": {
-    "ParentPackage": "",
+    "ParentPackage": "facepunch.sandbox",
     "PackageSettings": [
-      {
-        "DisplayType": "Boolean",
-        "Choices": [],
-        "ConVarName": "sv_paf_autogenerate",
-        "DisplayName": "Auto-Generate Forest (PA Forestation)",
-        "DefaultValue": "true",
-        "Description": "Auto generation of post apocalyptic forestation",
-        "Group": ""
-      },
       {
         "DisplayType": "Integer",
         "Choices": [],
@@ -73,6 +67,11 @@
         "Group": "",
         "Maximum": 1000
       }
-    ]
+    ],
+    "PrimaryAsset": "sbox.Community.PAF_Entity",
+    "PhysicsMins": "-16,-16,-16",
+    "PhysicsMaxs": "16,16,16",
+    "RenderMins": "-16,-16,-16",
+    "RenderMaxs": "16,16,16"
   }
 }

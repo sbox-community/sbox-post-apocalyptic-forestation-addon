@@ -45,6 +45,7 @@
 	</ItemGroup>
 
   <ItemGroup>
+		<Reference Include="D:\SteamLibrary\steamapps\common\sbox\.source2\references\facepunch.sandbox.10233.dll" />
 
   </ItemGroup>
 

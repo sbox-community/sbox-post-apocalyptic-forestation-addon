@@ -1,0 +1,44 @@
+@using System;
+@using Sandbox;
+@using Sandbox.UI;
+
+@namespace sbox.Community
+@attribute [StyleSheet("/EntityTag.scss")]
+@inherits Panel
+
+<root>
+	<div class="tree"></div>
+	<div class="column">
+	<label class="info1">PAF Station</label>
+		<label class="info2"> [Needs sv_cheats is 1]</label>
+	</div>
+</root>
+@code
+{
+	public AnimatedEntity EntPAF { get; set; }
+
+	public override void Tick()
+	{
+		var isHidden = true;
+		var position = (EntPAF.EyePosition - EntPAF.Rotation.Down * (40f + 10f* MathF.Cos(Time.Now))).ToScreen();
+		var distance = EntPAF.Position.DistanceSquared(Local.Client.Pawn.Position);
+		var distMax = (300 * 300);
+
+		if (position.z >= 0f && distance < distMax)
+		{
+			position.x *= Screen.Size.x * ScaleFromScreen;
+			position.y *= Screen.Size.y * ScaleFromScreen;
+
+
+			Style.Left = Length.Pixels(position.x);
+			Style.Top = Length.Pixels(position.y);
+
+			isHidden = false;
+
+		}
+		SetClass("hidden", isHidden);
+
+		base.Tick();
+	}
+
+}
