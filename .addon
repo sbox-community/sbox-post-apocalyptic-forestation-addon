@@ -72,6 +72,10 @@
     "PhysicsMins": "-16,-16,-16",
     "PhysicsMaxs": "16,16,16",
     "RenderMins": "-16,-16,-16",
-    "RenderMaxs": "16,16,16"
+    "RenderMaxs": "16,16,16",
+    "Summary": "Post Apocalyptic Forestation Addon",
+    "Description": "(PAF) Post Apocalyptic Forestation Addon;\n\nAddon does automatically detecting the areas of map and creating randomly post apocalyptic forest environments which are trees, grasses, bushes, flowers, reeds, ivys, rocks and debris.\n\nFor now, there are some map compatibility problems, in time, might be fixed.\n\nThere are planned some enhancements like ambients, birds, texture replacements etc.\n\nAdmin Commands:\n-sv_paf_generateforest\n-sv_paf_clearforest \n\n-sv_paf_spawngrassess, sv_paf_spawntrees, sv_paf_spawnrocks, sv_paf_spawnivys, sv_paf_spawndebris, sv_paf_createeffects\n\nServer Commands (Currently not working):\n-sv_paf_autogenerate, sv_paf_treeamount, sv_paf_rockamount, sv_paf_grassamount, sv_paf_ivyamount, sv_paf_debrisamount\n",
+    "ReplaceTags": "(PAF) Post Apocalyptic Forestation Addon;\n\nAddon does automatically detecting the areas of map and creating randomly post apocalyptic forest environments which are trees, grasses, bushes, flowers, reeds, ivys, rocks and debris.\n\nFor now, there are some map compatibility problems, in time, might be fixed.\n\nThere are planned some enhancements like ambients, birds, texture replacements etc.\n\nAdmin Commands:\n-sv_paf_generateforest\n-sv_paf_clearforest \n\n-sv_paf_spawngrassess, sv_paf_spawntrees, sv_paf_spawnrocks, sv_paf_spawnivys, sv_paf_spawndebris, sv_paf_createeffects\n\nServer Commands (Currently not working):\n-sv_paf_autogenerate, sv_paf_treeamount, sv_paf_rockamount, sv_paf_grassamount, sv_paf_ivyamount, sv_paf_debrisamount\n",
+    "Public": true
   }
 }
