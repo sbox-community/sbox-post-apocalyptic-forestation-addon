@@ -6,6 +6,8 @@
 @attribute [StyleSheet("/EntityTag.scss")]
 @inherits Panel
 
+@if (EntPAF == null || !EntPAF.IsValid()) return;
+
 <root>
 	<div class="tree"></div>
 	<div class="column">
@@ -19,6 +21,9 @@
 
 	public override void Tick()
 	{
+		if (EntPAF == null || !EntPAF.IsValid())
+			return;
+
 		var isHidden = true;
 		var position = (EntPAF.EyePosition - EntPAF.Rotation.Down * (40f + 10f* MathF.Cos(Time.Now))).ToScreen();
 		var distance = EntPAF.Position.DistanceSquared(Local.Client.Pawn.Position);
@@ -40,5 +45,11 @@
 
 		base.Tick();
 	}
+
+	protected override int BuildHash()
+    {
+		return HashCode.Combine(EntPAF);
+    }
+}
 
 }

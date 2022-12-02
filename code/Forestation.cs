@@ -1237,10 +1237,14 @@ namespace sbox.Community
 			else
 				spamProtect.Add( client.PlayerId, client );
 
-			SendGrasses( To.Single( client ) );
-			SendIvys( To.Single( client ) );
-			SendDebris( To.Single( client ) );
-			CreateEffectsCL( To.Single( client ) );
+			if( doneGrasses.Count > 0 )
+				SendGrasses( To.Single( client ) );
+			if( doneIvys.Count > 0 )
+				SendIvys( To.Single( client ) );
+			if( doneDebris.Count > 0 )
+				SendDebris( To.Single( client ) );
+			if( doneGrasses.Count + doneIvys.Count + doneDebris.Count > 0 )
+				CreateEffectsCL( To.Single( client ) );
 		}
 
 		[Event.Frame]
