@@ -75,7 +75,7 @@
     "RenderMaxs": "16,16,16",
     "Summary": "Post Apocalyptic Forestation Addon",
     "Description": "",
-    "ReplaceTags": "",
+    "ReplaceTags": "runtime entity",
     "Public": true
   }
 }

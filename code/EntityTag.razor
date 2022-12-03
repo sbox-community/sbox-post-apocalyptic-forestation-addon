@@ -21,8 +21,13 @@
 
 	public override void Tick()
 	{
+		//Check is still valid when removed
 		if (EntPAF == null || !EntPAF.IsValid())
+		{
+			SetClass("hidden", true);
+			//this.Delete();
 			return;
+		}
 
 		var isHidden = true;
 		var position = (EntPAF.EyePosition - EntPAF.Rotation.Down * (40f + 10f* MathF.Cos(Time.Now))).ToScreen();
@@ -50,6 +55,4 @@
     {
 		return HashCode.Combine(EntPAF);
     }
-}
-
 }

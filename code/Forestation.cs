@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace sbox.Community
@@ -53,7 +54,6 @@ namespace sbox.Community
 			user.Client.SendCommandToClient( "paf_request 0" );
 			return false;
 		}
-
 		/*[ConCmd.Server("paf_spawn")]
 		public static void asd()
 		{
@@ -77,8 +77,8 @@ namespace sbox.Community
 		static List<EntInfo> doneIvys = new();
 		static List<EntInfo> doneDebris = new();
 
-		static GradientFogController? defaultFog;
-		static Color? defaultAmbientColor;
+		public static GradientFogController? defaultFog;
+		public static string defaultAmbientColor;
 
 		static Dictionary<long, Client> spamProtect = new();
 		static bool joinedCL = false;
@@ -257,18 +257,18 @@ namespace sbox.Community
 		}
 
 		[ConCmd.Admin( "paf_request" )]
-		public static void adminCommandHandler(int flag)
+		public static void adminCommandHandler( int flag )
 		{
 			var found = false;
-			foreach(var ent in Entity.All)
-				if(ent as PAF_Entity is PAF_Entity paf_ent)
+			foreach ( var ent in Entity.All )
+				if ( ent as PAF_Entity is PAF_Entity paf_ent )
 				{
 					paf_ent.PlaySound( "switch_006" );
 					found = true;
 					break;
 				}
 
-			if(!found)
+			if ( !found )
 			{
 				Log.Error( "PAF entity is not found!" );
 				return;
@@ -284,15 +284,15 @@ namespace sbox.Community
 				PAF_Clear();
 
 		}
-		
-		[ConCmd.Client("paf_open_menu")]
+
+		[ConCmd.Client( "paf_open_menu" )]
 		public static void openPAFMenu() => showPanel();
 
 		private static void removePanel()
 		{
 			if ( mainPanel != null )
 			{
-				if( mainPanel.IsValid() )
+				if ( mainPanel.IsValid() )
 					mainPanel.Delete();
 
 				mainPanel = null;
@@ -324,7 +324,7 @@ namespace sbox.Community
 			menuPanel.Style.Top = Length.Fraction( 0.4f );
 			menuPanel.Style.PointerEvents = PointerEvents.All;
 
-			var closebutton = menuPanel.Add.Button("X", () => { removePanel(); } );
+			var closebutton = menuPanel.Add.Button( "X", () => { removePanel(); } );
 			closebutton.Style.FontSize = 18f;
 			closebutton.Style.Left = Length.Fraction( 0.91f );
 			closebutton.Style.Top = Length.Fraction( 0.01f );
@@ -362,9 +362,10 @@ namespace sbox.Community
 				defaultFog = Map.Scene.GradientFog;
 
 			if ( defaultAmbientColor is null )
-				defaultAmbientColor = Map.Scene.AmbientLightColor;
+				defaultAmbientColor = Map.Scene.AmbientLightColor.ToString( true, true );
 
-			Map.Scene.AmbientLightColor = "#4c5610";
+			if ( Host.IsServer )
+				Map.Scene.AmbientLightColor = "#4c5610";
 			//Map.Camera.BackgroundColor = "#4c5610";
 
 			Map.Scene.GradientFog.Enabled = true;
@@ -1168,8 +1169,8 @@ namespace sbox.Community
 			if ( defaultFog is not null )
 				Map.Scene.GradientFog = defaultFog.GetValueOrDefault();
 
-			if ( defaultAmbientColor is not null )
-				Map.Scene.AmbientLightColor = defaultAmbientColor.GetValueOrDefault();
+			if ( defaultAmbientColor is not null && !string.IsNullOrEmpty( defaultAmbientColor ) )
+				Map.Scene.AmbientLightColor = defaultAmbientColor;
 
 			clearForestCL( To.Everyone, grasses: true, ivys: true, debris: true, effects: true );
 		}
@@ -1212,8 +1213,9 @@ namespace sbox.Community
 				if ( defaultFog is not null )
 					Map.Scene.GradientFog = defaultFog.GetValueOrDefault();
 
-				if ( defaultAmbientColor is not null )
-					Map.Scene.AmbientLightColor = defaultAmbientColor.GetValueOrDefault();
+				// Server Only
+				//if ( defaultAmbientColor is not null && !string.IsNullOrEmpty( defaultAmbientColor ) )
+				//	Map.Scene.AmbientLightColor = defaultAmbientColor;
 			}
 		}
 
@@ -1237,13 +1239,13 @@ namespace sbox.Community
 			else
 				spamProtect.Add( client.PlayerId, client );
 
-			if( doneGrasses.Count > 0 )
+			if ( doneGrasses.Count > 0 )
 				SendGrasses( To.Single( client ) );
-			if( doneIvys.Count > 0 )
+			if ( doneIvys.Count > 0 )
 				SendIvys( To.Single( client ) );
-			if( doneDebris.Count > 0 )
+			if ( doneDebris.Count > 0 )
 				SendDebris( To.Single( client ) );
-			if( doneGrasses.Count + doneIvys.Count + doneDebris.Count > 0 )
+			if ( doneGrasses.Count + doneIvys.Count + doneDebris.Count > 0 )
 				CreateEffectsCL( To.Single( client ) );
 		}
 
