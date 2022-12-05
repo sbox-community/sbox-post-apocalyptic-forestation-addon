@@ -74,7 +74,7 @@
     "RenderMins": "-16,-16,-16",
     "RenderMaxs": "16,16,16",
     "Summary": "Post Apocalyptic Forestation Addon",
-    "Description": "",
+    "Description": "Addon does automatically detecting the areas of map and creating randomly post apocalyptic forest environments which are trees, grasses, bushes, flowers, reeds, ivys, rocks and debris.\n\nAdmin Commands:\n-sv_paf_generateforest\n-sv_paf_clearforest\n-sv_paf_*\n\nhttps://github.com/sbox-community/sbox-post-apocalyptic-forestation-addon",
     "ReplaceTags": "runtime entity",
     "Public": true
   }
