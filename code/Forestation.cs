@@ -23,16 +23,16 @@ namespace sbox.Community
 		private EntityTag tag;
 		public PAF_Entity()
 		{
-			if ( IsServer )
+			if ( Game.IsServer )
 			{
 				SetModel( "models/editor/cordon_helper.vmdl" );
 				SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
 			}
-			if ( IsClient )
+			if ( Game.IsClient )
 			{
 				PostApocalypticForestation.ClientJoinedHandler();
 
-				tag = Local.Hud.FindRootPanel().AddChild<EntityTag>();
+				tag = Game.RootPanel.FindRootPanel().AddChild<EntityTag>();
 				tag.EntPAF = this;
 
 				Log.Info( "[sbox.community] Post Apocalyptic Forestation is loaded!" );
@@ -43,7 +43,7 @@ namespace sbox.Community
 		{
 			PostApocalypticForestation.PAF_Clear();
 
-			if ( IsClient )
+			if ( Game.IsClient )
 				tag.Delete();
 		}
 
@@ -80,7 +80,7 @@ namespace sbox.Community
 		public static GradientFogController? defaultFog;
 		public static string defaultAmbientColor;
 
-		static Dictionary<long, Client> spamProtect = new();
+		static Dictionary<long, IClient> spamProtect = new();
 		static bool joinedCL = false;
 		static bool firstCalculation = false;
 
@@ -108,11 +108,11 @@ namespace sbox.Community
 		"models/rust_nature/overgrowth/creeping_tree_f.vmdl",
 		"models/rust_nature/overgrowth/creeping_tree_g.vmdl",
 		"models/rust_nature/overgrowth/creeping_tree_conifer_a.vmdl",
-		"models/sbox_props/trees/horse_chestnut/horse_chestnut.vmdl",
-		"models/sbox_props/trees/oak/tree_oak_big_a.vmdl",
-		"models/sbox_props/trees/oak/tree_oak_big_b.vmdl",
-		"models/sbox_props/trees/oak/tree_oak_medium_a.vmdl",
-		"models/sbox_props/trees/oak/tree_oak_small_a.vmdl",
+		//"models/sbox_props/trees/horse_chestnut/horse_chestnut.vmdl", //removed
+		//"models/sbox_props/trees/oak/tree_oak_big_a.vmdl", //removed
+		//"models/sbox_props/trees/oak/tree_oak_big_b.vmdl", //removed
+		//"models/sbox_props/trees/oak/tree_oak_medium_a.vmdl", //removed
+		//"models/sbox_props/trees/oak/tree_oak_small_a.vmdl", //removed
 		"models/rust_nature/american_beech/american_beech_a.vmdl",
 		"models/rust_nature/american_beech/american_beech_a_dead.vmdl",
 		"models/rust_nature/american_beech/american_beech_b.vmdl",
@@ -302,7 +302,7 @@ namespace sbox.Community
 		{
 			removePanel();
 
-			mainPanel = Local.Hud.FindRootPanel().Add.Panel();
+			mainPanel = Game.RootPanel.FindRootPanel().Add.Panel();
 			mainPanel.Style.Width = Length.Fraction( 1f );
 			mainPanel.Style.Height = Length.Fraction( 1f );
 
@@ -324,12 +324,14 @@ namespace sbox.Community
 			menuPanel.Style.Top = Length.Fraction( 0.4f );
 			menuPanel.Style.PointerEvents = PointerEvents.All;
 
-			var closebutton = menuPanel.Add.Button( "X", () => { removePanel(); } );
+			var closebutton = menuPanel.Add.Label();//Button( "X", () => { removePanel(); } );
 			closebutton.Style.FontSize = 18f;
 			closebutton.Style.Left = Length.Fraction( 0.91f );
 			closebutton.Style.Top = Length.Fraction( 0.01f );
+			closebutton.Text = "X";
+			closebutton.AddEventListener( "onclick", () => { removePanel(); } );
 
-			var generateButton = menuPanel.Add.Button( "Generate", () => { adminCommandHandler( 1 ); removePanel(); } );
+			var generateButton = menuPanel.Add.Label();//Button( "Generate", () => { adminCommandHandler( 1 ); removePanel(); } );
 			generateButton.Style.Position = PositionMode.Absolute;
 			generateButton.Style.FontSize = 30f;
 			generateButton.Style.Left = Length.Fraction( 0.27f );
@@ -341,8 +343,10 @@ namespace sbox.Community
 			generateButton.Style.BorderWidth = 2f;
 			generateButton.Style.BackgroundColor = Color.Green;
 			generateButton.Style.FontFamily = "Verdana";
+			generateButton.Text = "   Generate";
+			generateButton.AddEventListener( "onclick", () => { adminCommandHandler( 1 ); removePanel(); } );
 
-			var clearButton = menuPanel.Add.Button( "Clear", () => { adminCommandHandler( 2 ); removePanel(); } );
+			var clearButton = menuPanel.Add.Label();//Button( "Clear", () => { adminCommandHandler( 2 ); removePanel(); } );
 			clearButton.Style.Position = PositionMode.Absolute;
 			clearButton.Style.FontSize = 30f;
 			clearButton.Style.Left = Length.Fraction( 0.27f );
@@ -354,29 +358,31 @@ namespace sbox.Community
 			clearButton.Style.BorderWidth = 2f;
 			clearButton.Style.BackgroundColor = Color.Green;
 			clearButton.Style.FontFamily = "Verdana";
+			clearButton.Text = "   Clear";
+			clearButton.AddEventListener( "onclick", () => { adminCommandHandler( 2 ); removePanel(); } );
 		}
 
 		private static void applyEffects()
 		{
 			if ( defaultFog is null )
-				defaultFog = Map.Scene.GradientFog;
+				defaultFog = Game.SceneWorld.GradientFog;
 
 			if ( defaultAmbientColor is null )
-				defaultAmbientColor = Map.Scene.AmbientLightColor.ToString( true, true );
+				defaultAmbientColor = Game.SceneWorld.AmbientLightColor.ToString( true, true );
 
-			if ( Host.IsServer )
-				Map.Scene.AmbientLightColor = "#4c5610";
+			if ( Game.IsServer )
+				Game.SceneWorld.AmbientLightColor = "#4c5610";
 			//Map.Camera.BackgroundColor = "#4c5610";
 
-			Map.Scene.GradientFog.Enabled = true;
-			Map.Scene.GradientFog.Color = "#4c5610";
-			Map.Scene.GradientFog.MaximumOpacity = 0.05f;
-			Map.Scene.GradientFog.StartHeight = 10;
-			Map.Scene.GradientFog.EndHeight = 200;
-			Map.Scene.GradientFog.DistanceFalloffExponent = 10;
-			Map.Scene.GradientFog.VerticalFalloffExponent = 2;
-			Map.Scene.GradientFog.StartDistance = 500;
-			Map.Scene.GradientFog.EndDistance = 3000;
+			Game.SceneWorld.GradientFog.Enabled = true;
+			Game.SceneWorld.GradientFog.Color = "#4c5610";
+			Game.SceneWorld.GradientFog.MaximumOpacity = 0.05f;
+			Game.SceneWorld.GradientFog.StartHeight = 10;
+			Game.SceneWorld.GradientFog.EndHeight = 200;
+			Game.SceneWorld.GradientFog.DistanceFalloffExponent = 10;
+			Game.SceneWorld.GradientFog.VerticalFalloffExponent = 2;
+			Game.SceneWorld.GradientFog.StartDistance = 500;
+			Game.SceneWorld.GradientFog.EndDistance = 3000;
 		}
 
 		[ConCmd.Admin( "sv_paf_createeffects" )]
@@ -394,8 +400,8 @@ namespace sbox.Community
 
 		private static async Task SpawnGrasses_thread( int maxray, int amount, List<Vector3> hitpositions, List<Vector3> hitnormals )
 		{
-			var mapbounds = Map.Physics.Body.GetBounds();
-			var mapheight = Map.Physics.Body.GetBounds().Size.z;
+			var mapbounds = Game.PhysicsWorld.Body.GetBounds();
+			var mapheight = Game.PhysicsWorld.Body.GetBounds().Size.z;
 
 			var founded = 0;
 			int delaystep = 500; //batch
@@ -485,11 +491,11 @@ namespace sbox.Community
 
 				doneGrasses.Add( new EntInfo()
 				{
-					Model = i < count * 0.9f ? Rand.FromArray( GrassModels ) : Rand.FromArray( (Rand.Int( 1, 2 ) == 1) ? BushModels : ((Rand.Int( 1, 2 ) == 1) ? FlowerModels : ReedModels) ),
-					Scale = Rand.Float( i < count * 0.9f ? 0.7f : 0.4f, i < count * 0.9f ? 1.2f : 0.8f ),
+					Model = i < count * 0.9f ? Game.Random.FromArray( GrassModels ) : Game.Random.FromArray( (Game.Random.Int( 1, 2 ) == 1) ? BushModels : ((Game.Random.Int( 1, 2 ) == 1) ? FlowerModels : ReedModels) ),
+					Scale = Game.Random.Float( i < count * 0.9f ? 0.7f : 0.4f, i < count * 0.9f ? 1.2f : 0.8f ),
 					Position = hitpositions[i],
 					Rotation = Rotation.LookAt( hitnormals[i] + Vector3.Random * 0.1f, Vector3.Random ) * Rotation.From( 90, 0, 0 ),
-					RenderColor = Color.Lerp( "#4c5610", "#c79852", Rand.Float( 0.0f, 1f ) ),
+					RenderColor = Color.Lerp( "#4c5610", "#c79852", Game.Random.Float( 0.0f, 1f ) ),
 				} );
 			}
 
@@ -569,8 +575,8 @@ namespace sbox.Community
 
 			spawnedTrees.Clear();
 
-			var mapbounds = Map.Physics.Body.GetBounds();
-			var mapheight = Map.Physics.Body.GetBounds().Size.z;
+			var mapbounds = Game.PhysicsWorld.Body.GetBounds();
+			var mapheight = Game.PhysicsWorld.Body.GetBounds().Size.z;
 
 			for ( int i = 0; i < treeAmount; i++ )
 			{
@@ -642,12 +648,12 @@ namespace sbox.Community
 					Log.Info( "Creating tree; " + tr.HitPosition );
 
 				var ent = new ModelEntity();
-				ent.Model = Model.Load( Rand.FromArray( TreeModels ) );
-				ent.Scale = Rand.Float( 0.7f, 2.6f );
+				ent.Model = Model.Load( Game.Random.FromArray( TreeModels ) );
+				ent.Scale = Game.Random.Float( 0.7f, 2.6f );
 				ent.SetupPhysicsFromModel( PhysicsMotionType.Static );
 				ent.Position = tr.HitPosition;
 				ent.Rotation = Rotation.LookAt( Vector3.Up + Vector3.Random * 0.4f, Vector3.Random ) * Rotation.From( 90, 0, 0 );
-				ent.RenderColor = Color.Lerp( "#4c5610", "#c79852", Rand.Float( 0.0f, 1f ) );
+				ent.RenderColor = Color.Lerp( "#4c5610", "#c79852", Game.Random.Float( 0.0f, 1f ) );
 				spawnedTrees.Add( ent );
 			}
 
@@ -665,8 +671,8 @@ namespace sbox.Community
 
 			spawnedRocks.Clear();
 
-			var mapbounds = Map.Physics.Body.GetBounds();
-			var mapheight = Map.Physics.Body.GetBounds().Size.z;
+			var mapbounds = Game.PhysicsWorld.Body.GetBounds();
+			var mapheight = Game.PhysicsWorld.Body.GetBounds().Size.z;
 
 			for ( int i = 0; i < rockAmount; i++ )
 			{
@@ -726,12 +732,12 @@ namespace sbox.Community
 					Log.Info( "Creating rock; " + tr.HitPosition );
 
 				var ent = new ModelEntity();
-				ent.Model = Model.Load( Rand.FromArray( RockModels ) );
-				ent.Scale = Rand.Float( 0.3f, 0.7f );
+				ent.Model = Model.Load( Game.Random.FromArray( RockModels ) );
+				ent.Scale = Game.Random.Float( 0.3f, 0.7f );
 				ent.Position = tr.HitPosition;
 				ent.SetupPhysicsFromModel( PhysicsMotionType.Static );
 				ent.Rotation = Rotation.LookAt( Vector3.Up + Vector3.Random * 0.4f, Vector3.Random ) * Rotation.From( 90, 0, 0 );
-				ent.RenderColor = Color.Lerp( "#4c5610", "#c79852", Rand.Float( 0.0f, 1f ) );
+				ent.RenderColor = Color.Lerp( "#4c5610", "#c79852", Game.Random.Float( 0.0f, 1f ) );
 				spawnedRocks.Add( ent );
 
 			}
@@ -741,8 +747,8 @@ namespace sbox.Community
 
 		private static async Task SpawnIvys_thread( int maxray, int amount, List<Vector3> hitpositions, List<Vector3> hitnormals )
 		{
-			var mapbounds = Map.Physics.Body.GetBounds();
-			var mapheight = Map.Physics.Body.GetBounds().Size.z;
+			var mapbounds = Game.PhysicsWorld.Body.GetBounds();
+			var mapheight = Game.PhysicsWorld.Body.GetBounds().Size.z;
 
 			var founded = 0;
 			int delaystep = 500; //batch
@@ -835,11 +841,11 @@ namespace sbox.Community
 
 				doneIvys.Add( new EntInfo()
 				{
-					Model = Rand.FromArray( IvyModels ),
-					Scale = Rand.Float( 0.7f, 1.2f ),
+					Model = Game.Random.FromArray( IvyModels ),
+					Scale = Game.Random.Float( 0.7f, 1.2f ),
 					Position = hitpositions[i],
 					Rotation = Rotation.LookAt( hitnormals[i] + Vector3.Random * 0.4f, Vector3.Random ) * Rotation.From( 0, 0, 90 ), //review
-					RenderColor = Color.Lerp( "#4c5610", "#c79852", Rand.Float( 0.0f, 1f ) ),
+					RenderColor = Color.Lerp( "#4c5610", "#c79852", Game.Random.Float( 0.0f, 1f ) ),
 				} );
 
 			}
@@ -913,8 +919,8 @@ namespace sbox.Community
 
 		private static async Task SpawnDebris_thread( int maxray, int amount, List<Vector3> hitpositions, List<Vector3> hitnormals )
 		{
-			var mapbounds = Map.Physics.Body.GetBounds();
-			var mapheight = Map.Physics.Body.GetBounds().Size.z;
+			var mapbounds = Game.PhysicsWorld.Body.GetBounds();
+			var mapheight = Game.PhysicsWorld.Body.GetBounds().Size.z;
 
 			var founded = 0;
 			int delaystep = 10000; //batch
@@ -1021,11 +1027,11 @@ namespace sbox.Community
 
 				doneDebris.Add( new EntInfo()
 				{
-					Model = Rand.FromArray( DebrisModels ),
-					Scale = Rand.Float( 0.8f, 1.2f ),
+					Model = Game.Random.FromArray( DebrisModels ),
+					Scale = Game.Random.Float( 0.8f, 1.2f ),
 					Position = hitpositions[i],
 					Rotation = Rotation.LookAt( hitnormals[i] + Vector3.Random * 0.1f, Vector3.Random ) * Rotation.From( 90, 0, 0 ),
-					RenderColor = Color.Lerp( "#4c5610", "#c79852", Rand.Float( 0.0f, 1f ) ),
+					RenderColor = Color.Lerp( "#4c5610", "#c79852", Game.Random.Float( 0.0f, 1f ) ),
 				} );
 			}
 
@@ -1109,7 +1115,7 @@ namespace sbox.Community
 		{
 			if ( forceCalculation || !firstCalculation )
 			{
-				var ratio = (Map.Physics.Body.GetBounds().Size.x * Map.Physics.Body.GetBounds().Size.y) / 130347680f; //based construct map
+				var ratio = (Game.PhysicsWorld.Body.GetBounds().Size.x * Game.PhysicsWorld.Body.GetBounds().Size.y) / 130347680f; //based construct map
 
 				Log.Info( $"[PAF] Map scale calculated as {ratio}" );
 
@@ -1121,7 +1127,7 @@ namespace sbox.Community
 				ivyAmount = Math.Min( (int)(2000 * ratio), 3000 );
 				debrisAmount = Math.Min( (int)(1000 * ratio), 1000 );
 
-				Log.Info( $"[PAF] Calculated as Sufficiently for '{Map.Name}'; Tree: {treeAmount}, Rock: {rockAmount}, Grass: {grassAmount}, Ivy: {ivyAmount}, Debris: {debrisAmount}" );
+				Log.Info( $"[PAF] Calculated as Sufficiently for '{Game.Server.MapIdent}'; Tree: {treeAmount}, Rock: {rockAmount}, Grass: {grassAmount}, Ivy: {ivyAmount}, Debris: {debrisAmount}" );
 
 				firstCalculation = true;
 			}
@@ -1167,10 +1173,10 @@ namespace sbox.Community
 			}
 
 			if ( defaultFog is not null )
-				Map.Scene.GradientFog = defaultFog.GetValueOrDefault();
+				Game.SceneWorld.GradientFog = defaultFog.GetValueOrDefault();
 
 			if ( defaultAmbientColor is not null && !string.IsNullOrEmpty( defaultAmbientColor ) )
-				Map.Scene.AmbientLightColor = defaultAmbientColor;
+				Game.SceneWorld.AmbientLightColor = defaultAmbientColor;
 
 			clearForestCL( To.Everyone, grasses: true, ivys: true, debris: true, effects: true );
 		}
@@ -1211,11 +1217,11 @@ namespace sbox.Community
 			if ( effects )
 			{
 				if ( defaultFog is not null )
-					Map.Scene.GradientFog = defaultFog.GetValueOrDefault();
+					Game.SceneWorld.GradientFog = defaultFog.GetValueOrDefault();
 
 				// Server Only
 				//if ( defaultAmbientColor is not null && !string.IsNullOrEmpty( defaultAmbientColor ) )
-				//	Map.Scene.AmbientLightColor = defaultAmbientColor;
+				//	Game.SceneWorld.Scene.AmbientLightColor = defaultAmbientColor;
 			}
 		}
 
@@ -1226,18 +1232,18 @@ namespace sbox.Community
 		{
 			var client = ConsoleSystem.Caller;
 
-			if ( spamProtect.TryGetValue( client.PlayerId, out var cl ) )
+			if ( spamProtect.TryGetValue( client.SteamId, out var cl ) )
 			{
 				if ( cl.Equals( client ) )
 					return;
 				else
 				{
-					spamProtect.Remove( client.PlayerId );
-					spamProtect.Add( client.PlayerId, client );
+					spamProtect.Remove( client.SteamId );
+					spamProtect.Add( client.SteamId, client );
 				}
 			}
 			else
-				spamProtect.Add( client.PlayerId, client );
+				spamProtect.Add( client.SteamId, client );
 
 			if ( doneGrasses.Count > 0 )
 				SendGrasses( To.Single( client ) );
@@ -1249,7 +1255,7 @@ namespace sbox.Community
 				CreateEffectsCL( To.Single( client ) );
 		}
 
-		[Event.Frame]
+		[Event.Client.Frame]
 		public static void ClientJoinedHandlerCL()
 		{
 			if ( !joinedCL )

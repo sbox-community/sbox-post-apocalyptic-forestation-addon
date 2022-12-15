@@ -13,7 +13,6 @@
   ],
   "HasCode": true,
   "CodePath": "/code/",
-  "RootNamespace": null,
   "Metadata": {
     "ParentPackage": "facepunch.sandbox",
     "PackageSettings": [

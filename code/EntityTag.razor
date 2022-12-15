@@ -30,8 +30,8 @@
 		}
 
 		var isHidden = true;
-		var position = (EntPAF.EyePosition - EntPAF.Rotation.Down * (40f + 10f* MathF.Cos(Time.Now))).ToScreen();
-		var distance = EntPAF.Position.DistanceSquared(Local.Client.Pawn.Position);
+		var position = (EntPAF.Position - EntPAF.Rotation.Down * (40f + 10f* MathF.Cos(Time.Now))).ToScreen();
+		var distance = EntPAF.Position.DistanceSquared(Game.LocalPawn.Position);
 		var distMax = (300 * 300);
 
 		if (position.z >= 0f && distance < distMax)

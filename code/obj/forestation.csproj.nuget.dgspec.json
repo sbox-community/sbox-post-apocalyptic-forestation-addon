@@ -4,6 +4,130 @@
     "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\sbox-post-apocalyptic-forestation-addon\\code\\forestation.csproj": {}
   },
   "projects": {
+    "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\base\\code\\base.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\base\\code\\base.csproj",
+        "projectName": "base",
+        "projectPath": "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\base\\code\\base.csproj",
+        "packagesPath": "C:\\Users\\bypolat\\.nuget\\packages\\",
+        "outputPath": "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\base\\code\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "H:\\visualstudio_diger\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\bypolat\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\menu\\code\\menu.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\menu\\code\\menu.csproj",
+        "projectName": "menu",
+        "projectPath": "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\menu\\code\\menu.csproj",
+        "packagesPath": "C:\\Users\\bypolat\\.nuget\\packages\\",
+        "outputPath": "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\menu\\code\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "H:\\visualstudio_diger\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\bypolat\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\base\\code\\base.csproj": {
+                "projectPath": "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\base\\code\\base.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
     "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\sbox-post-apocalyptic-forestation-addon\\code\\forestation.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -12,6 +136,76 @@
         "projectPath": "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\sbox-post-apocalyptic-forestation-addon\\code\\forestation.csproj",
         "packagesPath": "C:\\Users\\bypolat\\.nuget\\packages\\",
         "outputPath": "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\sbox-post-apocalyptic-forestation-addon\\code\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "H:\\visualstudio_diger\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\bypolat\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\base\\code\\base.csproj": {
+                "projectPath": "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\base\\code\\base.csproj"
+              },
+              "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\menu\\code\\menu.csproj": {
+                "projectPath": "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\menu\\code\\menu.csproj"
+              },
+              "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\tools\\tools.csproj": {
+                "projectPath": "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\tools\\tools.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\tools\\tools.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\tools\\tools.csproj",
+        "projectName": "tools",
+        "projectPath": "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\tools\\tools.csproj",
+        "packagesPath": "C:\\Users\\bypolat\\.nuget\\packages\\",
+        "outputPath": "D:\\SteamLibrary\\steamapps\\common\\sbox\\addons\\tools\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "H:\\visualstudio_diger\\Shared\\NuGetPackages"
