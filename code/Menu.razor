@@ -1,0 +1,96 @@
+@using Sandbox.UI;
+@using Sandbox.UI.Construct;
+
+@inherits PanelComponent
+@namespace Sandbox
+
+<root></root>
+
+@code
+{
+    public void CreateMenu(){
+        this.Panel.Style.PointerEvents = PointerEvents.All;
+        this.Panel.Style.Width = Length.Fraction( 1f );
+		this.Panel.Style.Height = Length.Fraction( 1f );
+
+		var background = this.Panel.Add.Panel();
+		background.Style.Position = PositionMode.Absolute;
+		background.Style.Width = Length.Fraction( 0.3f );
+		background.Style.Height = Length.Fraction( 0.5f );
+		background.Style.Left = Length.Fraction( 0.35f );
+		background.Style.Top = Length.Fraction( 0.3f );
+		background.Style.BackgroundSizeX = Length.Fraction( 1.28f );
+		background.Style.BackgroundSizeY = Length.Fraction( 1.23f );
+		background.Style.BackgroundImage = Texture.LoadFromFileSystem( "materials/paf/forest_frame.vtex", FileSystem.Mounted );
+		background.Style.BackgroundRepeat = BackgroundRepeat.NoRepeat;
+
+		var menuPanel = background.Add.Panel();
+		menuPanel.Style.Width = Length.Fraction( 0.2f );
+		menuPanel.Style.Height = Length.Fraction( 0.3f );
+		menuPanel.Style.Left = Length.Fraction( 0.4f );
+		menuPanel.Style.Top = Length.Fraction( 0.4f );
+		menuPanel.Style.PointerEvents = PointerEvents.All;
+
+		var closebutton = menuPanel.Add.Label();//Button( "X", () => { removePanel(); } );
+		closebutton.Style.FontSize = 32f;
+		closebutton.Style.Left = Length.Fraction( 0.91f );
+		closebutton.Style.Top = Length.Fraction( 0.01f );
+        closebutton.Style.Width = Length.Fraction( 0.16f );
+		closebutton.Style.Height = Length.Fraction( 0.22f );
+        closebutton.Style.BorderBottomLeftRadius = Length.Pixels(4f);
+        closebutton.Style.BorderBottomRightRadius = Length.Pixels(4f);
+        closebutton.Style.BorderTopLeftRadius = Length.Pixels(4f);
+        closebutton.Style.BorderTopRightRadius = Length.Pixels(4f);
+        // closebutton.Style.BorderWidth = 2f;
+        closebutton.Style.FontFamily = "Arial";
+		// closebutton.Style.BackgroundColor = Color.Green.Darken(0.4f);
+		closebutton.Text = "X";
+		closebutton.AddEventListener( "onclick", () => { PostApocalypticForestation.removePanel(); } );
+
+		var generateButton = menuPanel.Add.Label();//Button( "Generate", () => { adminCommandHandler( 1 ); removePanel(); } );
+		generateButton.Style.Position = PositionMode.Absolute;
+		generateButton.Style.FontSize = 30f;
+		generateButton.Style.Left = Length.Fraction( 0.27f );
+		generateButton.Style.Top = Length.Fraction( 0.3f );
+		generateButton.Style.Width = Length.Fraction( 0.5f );
+		generateButton.Style.Height = Length.Fraction( 0.15f );
+		generateButton.Style.AlignItems = Align.Center;
+		generateButton.Style.TextAlign = TextAlign.Center;
+		generateButton.Style.JustifyContent = Justify.Center;
+		generateButton.Style.BorderWidth = 4f;
+        generateButton.Style.BorderColor = Color.Black;
+		generateButton.Style.BackgroundColor = Color.Green.Darken(0.1f);
+		generateButton.Style.FontFamily = "Roboto";
+		generateButton.Style.FontWeight = 600;
+        generateButton.Style.BorderBottomLeftRadius = Length.Pixels(5f);
+        generateButton.Style.BorderBottomRightRadius = Length.Pixels(5f);
+        generateButton.Style.BorderTopLeftRadius = Length.Pixels(5f);
+        generateButton.Style.BorderTopRightRadius = Length.Pixels(5f);
+        generateButton.Style.PaddingLeft = Length.Pixels(0f);
+		generateButton.Text = "Generate";
+		generateButton.AddEventListener( "onclick", () => { using ( Rpc.FilterInclude( c => c == Connection.Local ) ) {PostApocalypticForestation.adminCommandHandler( 1 ); } PostApocalypticForestation.removePanel(); } );
+
+		var clearButton = menuPanel.Add.Label();//Button( "Clear", () => { adminCommandHandler( 2 ); removePanel(); } );
+		clearButton.Style.Position = PositionMode.Absolute;
+		clearButton.Style.FontSize = 30f;
+		clearButton.Style.Left = Length.Fraction( 0.27f );
+		clearButton.Style.Top = Length.Fraction( 0.52f );
+		clearButton.Style.Width = Length.Fraction( 0.5f );
+		clearButton.Style.Height = Length.Fraction( 0.15f );
+		clearButton.Style.AlignItems = Align.Center;
+		clearButton.Style.JustifyContent = Justify.Center;
+        clearButton.Style.FontWeight = 600;
+		clearButton.Style.BorderWidth = 4f;
+		clearButton.Style.BorderColor = Color.Black;
+        clearButton.Style.TextAlign = TextAlign.Center;
+		clearButton.Style.BackgroundColor = Color.Green.Darken(0.1f);
+        clearButton.Style.BorderBottomLeftRadius = Length.Pixels(5f);
+        clearButton.Style.BorderBottomRightRadius = Length.Pixels(5f);
+        clearButton.Style.BorderTopLeftRadius = Length.Pixels(5f);
+        clearButton.Style.BorderTopRightRadius = Length.Pixels(5f);
+        clearButton.Style.PaddingLeft = Length.Pixels(0f);
+		clearButton.Style.FontFamily = "Roboto";
+		clearButton.Text = "Clear";
+		clearButton.AddEventListener( "onclick", () => { using ( Rpc.FilterInclude( c => c == Connection.Local ) ) {PostApocalypticForestation.adminCommandHandler( 2 ); } PostApocalypticForestation.removePanel(); } );
+    }
+}

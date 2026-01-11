@@ -1,0 +1,17 @@
+{
+  "Title": "Post Apocalyptic Forestation",
+  "Type": "addon",
+  "Org": "local",
+  "Ident": "post_apocalyptic_forestation",
+  "Schema": 1,
+  "IncludeSourceFiles": false,
+  "Resources": "/materials/paf/*\n/sounds/paf/*",
+  "PackageReferences": [],
+  "EditorReferences": null,
+  "Mounts": null,
+  "IsStandaloneOnly": false,
+  "Metadata": {
+    "StartupScene": "scenes/sandbox.scene",
+    "ParentPackage": "facepunch.sandbox"
+  }
+}

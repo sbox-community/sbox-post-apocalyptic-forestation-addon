@@ -1,0 +1,8 @@
+{
+  "Prefab": "entity/paf_entity.prefab",
+  "Title": "Post Apocalyptic Forestation",
+  "Description": "Forestation Addon",
+  "IncludeCode": true,
+  "__references": [],
+  "__version": 0
+}
