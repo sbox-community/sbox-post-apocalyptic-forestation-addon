@@ -7,13 +7,13 @@
 
 <style>
     EntityTag {
-	transform: translate( -50% );
 	transition: opacity 0.2s ease-in;
 	align-items: center;
 	flex-direction: row;
 	opacity: 1;
 	display: flex;
     top:0;
+    width:100%;
 
 	.tree {
 		width: 39px;
@@ -26,6 +26,7 @@
 
 	.column {
 		flex-direction: column;
+        width:100%
 	}
 
 	.info1 {
@@ -53,7 +54,7 @@
 <root>
 	<div class="tree"></div>
 	<div class="column">
-	<label class="info1">PAF Station</label>
-		<label class="info2"> [Needs 'Refresh Objects' Permission]</label>
+	    <label class="info1">PAF Station</label>
+	    <label class="info2"> [Needs 'Refresh Objects' Permission]</label>
 	</div>
 </root>

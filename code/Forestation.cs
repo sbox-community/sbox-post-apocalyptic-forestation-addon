@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using static Sandbox.Component;
 
@@ -30,7 +31,7 @@ public partial class PAF_Entity : Component, Component.IPressable, Component.INe
 
 	protected override void OnDestroy()
 	{
-		if (!IsProxy)
+		if ( !IsProxy )
 			PostApocalypticForestation.PAF_Clear();
 
 		base.OnDestroy();
@@ -68,6 +69,7 @@ public partial class PostApocalypticForestation : INetworkListener
 
 	public static bool Generated = false;
 	public static float GenerateSpamProtection = 0f;
+	public static CancellationTokenSource Cancelled = new();
 
 	static List<GameObject> spawnedTrees = null; //svside
 	static List<GameObject> spawnedRocks = null; //svside
@@ -360,34 +362,34 @@ public partial class PostApocalypticForestation : INetworkListener
 	[Rpc.Broadcast]
 	public static async void adminCommandHandler( int flag )
 	{
-			if ( flag == 0 )
+		if ( flag == 0 )
+		{
+			using ( Rpc.FilterInclude( c => c == Rpc.Caller ) )
 			{
-				using ( Rpc.FilterInclude( c => c == Rpc.Caller ) )
-				{
-					openPAFMenu();
-				}
+				openPAFMenu();
 			}
-			else if ( flag == 1  )
+		}
+		else if ( flag == 1 )
+		{
+			if ( !Rpc.Caller.CanRefreshObjects )
 			{
-				if( !Rpc.Caller.CanRefreshObjects )
-				{
-					InfoClient("You do not have permission to use this, 'Refresh Objects' permission is needed!");
-					return;
-				}
-
-				await PAF_Generate();
-
+				InfoClient( "You do not have permission to use this, 'Refresh Objects' permission is needed!" );
+				return;
 			}
-			else if ( flag == 2 )
+
+			await PAF_Generate();
+
+		}
+		else if ( flag == 2 )
+		{
+			if ( !Rpc.Caller.CanRefreshObjects )
 			{
-				if ( !Rpc.Caller.CanRefreshObjects )
-				{
-					InfoClient( "You do not have permission to use this, 'Refresh Objects' permission is needed!" );
-					return;
-				}
-
-				PAF_Clear();
+				InfoClient( "You do not have permission to use this, 'Refresh Objects' permission is needed!" );
+				return;
 			}
+
+			PAF_Clear();
+		}
 	}
 
 	public static void removePanel()
@@ -453,6 +455,11 @@ public partial class PostApocalypticForestation : INetworkListener
 	[Rpc.Broadcast]
 	public static void CreateEffectsCL()
 	{
+		if ( Cancelled.IsCancellationRequested )
+		{
+			PAF_Clear();
+			return;
+		}
 		applyEffects();
 	}
 
@@ -485,11 +492,11 @@ public partial class PostApocalypticForestation : INetworkListener
 
 			//Ground checking
 			var tr = Game.ActiveScene.Trace.Ray( randomPoint, angle )
-				.UseRenderMeshes( true )
-				.UsePhysicsWorld( false )
+				//.UseRenderMeshes( true )
+				.UsePhysicsWorld( true )
 				.UseHitboxes( false )
 				.UseHitPosition( true )
-				.WithoutTags( "<invalid>", "water", "paf")
+				.WithoutTags( "<invalid>", "water", "paf" )
 				.Run();
 
 			if ( !tr.Hit )
@@ -543,9 +550,16 @@ public partial class PostApocalypticForestation : INetworkListener
 			} );
 		}
 
+		if ( Cancelled.IsCancellationRequested )
+		{
+			PAF_Clear();
+			return;
+		}
+
 		SendGrasses();
 
 		Logger.Info( $"[PAF-SV] Prepared {count} grasses!" );
+
 	}
 
 	//[Rpc.Broadcast]
@@ -598,7 +612,7 @@ public partial class PostApocalypticForestation : INetworkListener
 					var entObj = new GameObject();
 					entObj.Tags.Add( "paf" );
 					var ent = entObj.AddComponent<ModelRenderer>();
-					ent.Model = model.Contains(".vmdl") ? Model.Load( model ) : await DownloadModel( model );
+					ent.Model = model.Contains( ".vmdl" ) ? Model.Load( model ) : await DownloadModel( model );
 					ent.WorldScale = scale;
 					ent.WorldPosition = position;
 					ent.WorldRotation = rotation;
@@ -648,8 +662,8 @@ public partial class PostApocalypticForestation : INetworkListener
 
 			//Ground checking
 			var tr = Game.ActiveScene.Trace.Ray( randomPoint, angle )
-				.UseRenderMeshes( true )
-				.UsePhysicsWorld( false )
+				//.UseRenderMeshes( true )
+				.UsePhysicsWorld( true )
 				.UseHitboxes( false )
 				.UseHitPosition( true )
 				.WithoutTags( "<invalid>", "water", "passbullets", "sky", "paf" )
@@ -668,12 +682,12 @@ public partial class PostApocalypticForestation : INetworkListener
 
 			var tr2 = Game.ActiveScene.Scene.Trace // Check the roof from inside
 			.Ray( hitPos + Vector3.Up * 150f, hitPos + Vector3.Up * 1000f )
-				.UseRenderMeshes( true )
+				//.UseRenderMeshes( true )
 				.UsePhysicsWorld( true )
-				.Size(140f)
+				.Size( 140f )
 			.Run();
 
-			if ( tr2.Hit)
+			if ( tr2.Hit )
 				continue;
 
 			//var tr3 = Game.ActiveScene.Scene.Trace // Check the ground space
@@ -713,8 +727,14 @@ public partial class PostApocalypticForestation : INetworkListener
 			entObj.NetworkSpawn();
 		}
 
-		Logger.Info( $"[PAF-SV] Created {spawnedTrees.Count} trees!" );
 
+		if ( Cancelled.IsCancellationRequested )
+		{
+			PAF_Clear();
+			return;
+		}
+
+		Logger.Info( $"[PAF-SV] Created {spawnedTrees.Count} trees!" );
 	}
 
 	public static async Task SpawnRocks()
@@ -739,8 +759,8 @@ public partial class PostApocalypticForestation : INetworkListener
 
 			//Ground checking
 			var tr = Game.ActiveScene.Trace.Ray( randomPoint, angle )
-				.UseRenderMeshes( true )
-				.UsePhysicsWorld( false )
+				//.UseRenderMeshes( true )
+				.UsePhysicsWorld( true )
 				.UseHitboxes( false )
 				.UseHitPosition( true )
 				.WithoutTags( "<invalid>", "water", "passbullets", "sky", "paf" )
@@ -785,7 +805,14 @@ public partial class PostApocalypticForestation : INetworkListener
 			entObj.NetworkSpawn();
 		}
 
+		if ( Cancelled.IsCancellationRequested )
+		{
+			PAF_Clear();
+			return;
+		}
+
 		Logger.Info( $"[PAF-SV] Created {spawnedRocks.Count} rocks!" );
+
 	}
 
 	private static async Task SpawnIvys_thread( int maxray, int amount, List<Vector3> hitpositions, List<Vector3> hitnormals )
@@ -816,8 +843,8 @@ public partial class PostApocalypticForestation : INetworkListener
 
 			//Ground checking
 			var tr = Game.ActiveScene.Trace.Ray( randomPoint, randomPoint * Vector3.Random * calculatedHeight )
-				.UseRenderMeshes( true )
-				.UsePhysicsWorld( false )
+				//.UseRenderMeshes( true )
+				.UsePhysicsWorld( true )
 				.UseHitboxes( false )
 				.UseHitPosition( true )
 				.WithoutTags( "<invalid>", "water", "passbullets", "sky", "paf" )
@@ -828,8 +855,8 @@ public partial class PostApocalypticForestation : INetworkListener
 
 			//Sky checking
 			var trSky = Game.ActiveScene.Trace.Ray( tr.HitPosition, tr.HitPosition + (Vector3.Up * calculatedHeight) )
-				.UseRenderMeshes( true )
-				.UsePhysicsWorld( false )
+				//.UseRenderMeshes( true )
+				.UsePhysicsWorld( true )
 				.UseHitboxes( false )
 				.UseHitPosition( true )
 				// passbullets
@@ -883,6 +910,12 @@ public partial class PostApocalypticForestation : INetworkListener
 				RenderColor = Color.Lerp( "#4c5610", "#c79852", Game.Random.Float( 0.0f, 1f ) ),
 			} );
 
+		}
+
+		if ( Cancelled.IsCancellationRequested )
+		{
+			PAF_Clear();
+			return;
 		}
 
 		SendIvys();
@@ -985,8 +1018,8 @@ public partial class PostApocalypticForestation : INetworkListener
 
 			//Ground checking
 			var tr = Game.ActiveScene.Trace.Ray( randomPoint, angle )
-				.UseRenderMeshes( true )
-				.UsePhysicsWorld( false )
+				//.UseRenderMeshes( true )
+				.UsePhysicsWorld( true )
 				.UseHitboxes( false )
 				.UseHitPosition( true )
 				.WithoutTags( "<invalid>", "water", "passbullets", "sky", "paf" )
@@ -997,8 +1030,8 @@ public partial class PostApocalypticForestation : INetworkListener
 
 			//Sky checking
 			var trSky = Game.ActiveScene.Trace.Ray( tr.HitPosition, tr.HitPosition + (Vector3.Up * calculatedHeight) )
-				.UseRenderMeshes( true )
-				.UsePhysicsWorld( false )
+				//.UseRenderMeshes( true )
+				.UsePhysicsWorld( true )
 				.UseHitboxes( false )
 				.UseHitPosition( true )
 				.WithoutTags( "paf" )
@@ -1022,7 +1055,7 @@ public partial class PostApocalypticForestation : INetworkListener
 			++founded;
 		}
 	}
-	
+
 	public static async Task SpawnDebris()
 	{
 		spawnedDebris ??= new();
@@ -1052,6 +1085,12 @@ public partial class PostApocalypticForestation : INetworkListener
 				Rotation = Rotation.LookAt( hitnormals[i] + Vector3.Random * 0.1f, Vector3.Random ) * Rotation.From( 90, 0, 0 ),
 				RenderColor = Color.Lerp( "#4c5610", "#c79852", Game.Random.Float( 0.0f, 1f ) ),
 			} );
+		}
+
+		if ( Cancelled.IsCancellationRequested )
+		{
+			PAF_Clear();
+			return;
 		}
 
 		SendDebris();
@@ -1121,7 +1160,6 @@ public partial class PostApocalypticForestation : INetworkListener
 			}
 		}
 	}
-
 	private static async Task SpawnForest()
 	{
 		await SpawnTrees(); //svside
@@ -1165,7 +1203,7 @@ public partial class PostApocalypticForestation : INetworkListener
 			return;
 		}
 
-		float cooldown = 120f;
+		float cooldown = 180f;
 
 		if ( (GenerateSpamProtection - Time.Now) > cooldown )
 			GenerateSpamProtection = 0;
@@ -1177,6 +1215,7 @@ public partial class PostApocalypticForestation : INetworkListener
 		}
 
 		Generated = true;
+		Cancelled = new();
 		GenerateSpamProtection = Time.Now + cooldown; //180 seconds cooldown
 
 		calculateRatios();
@@ -1190,7 +1229,7 @@ public partial class PostApocalypticForestation : INetworkListener
 			foreach ( var trees in spawnedTrees )
 				trees.Destroy();
 
-			if( spawnedTrees.Count > 0)
+			if ( spawnedTrees.Count > 0 )
 				Logger.Info( $"[PAF-SV] Removed {spawnedTrees.Count} trees!" );
 
 			spawnedTrees.Clear();
@@ -1227,6 +1266,7 @@ public partial class PostApocalypticForestation : INetworkListener
 		clearForestCL( grasses: true, ivys: true, debris: true, effects: true );
 
 		Generated = false;
+		Cancelled.Cancel();
 
 		removePanel();
 	}
@@ -1295,7 +1335,7 @@ public partial class PostApocalypticForestation : INetworkListener
 		}
 		else
 			spamProtect.Add( client.SteamId, client );
-		
+
 		using ( Rpc.FilterInclude( c => c == client ) )
 		{
 			if ( doneGrasses.Count > 0 )

@@ -86,30 +86,6 @@
         "SurfaceVelocity": "0,0,0"
       },
       {
-        "__type": "Sandbox.WorldPanel",
-        "__guid": "6cac260d-8e49-47d3-a04b-4944e8164b50",
-        "__enabled": true,
-        "Flags": 0,
-        "HorizontalAlign": "Left",
-        "InteractionRange": 1000,
-        "LookAtCamera": true,
-        "OnComponentDestroy": null,
-        "OnComponentDisabled": null,
-        "OnComponentEnabled": null,
-        "OnComponentFixedUpdate": null,
-        "OnComponentStart": null,
-        "OnComponentUpdate": null,
-        "PanelSize": "1024,1024",
-        "RenderOptions": {
-          "GameLayer": true,
-          "OverlayLayer": true,
-          "BloomLayer": false,
-          "AfterUILayer": false
-        },
-        "RenderScale": 2,
-        "VerticalAlign": "Bottom"
-      },
-      {
         "__type": "Sandbox.GradientFog",
         "__guid": "d9ad7e8a-c2e3-47ff-a2ef-0dc182362ab5",
         "__enabled": false,
@@ -142,7 +118,7 @@
       },
       {
         "__type": "PAF_Entity",
-        "__guid": "179efe0d-a5e5-4952-b4ad-5bb3bdcbfe3c",
+        "__guid": "4c2900d3-bfcb-49c6-a2f3-2c5daca3751d",
         "__enabled": true,
         "Flags": 0,
         "forestFrame": "materials/paf/forest_frame.vtex",
@@ -153,21 +129,65 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "threeTrees": "materials/paf/three-trees.vtex"
-      },
-      {
-        "__type": "Sandbox.EntityTag",
-        "__guid": "aaa46f61-75e1-4384-b556-0a6dff3996c9",
-        "__enabled": true,
-        "Flags": 0,
-        "OnComponentDestroy": null,
-        "OnComponentDisabled": null,
-        "OnComponentEnabled": null,
-        "OnComponentFixedUpdate": null,
-        "OnComponentStart": null,
-        "OnComponentUpdate": null
       }
     ],
-    "Children": [],
+    "Children": [
+      {
+        "__guid": "57c69375-e176-4586-92ba-be89677ce8a4",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "tagentity",
+        "Position": "0,4.429167,29.55508",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.EntityTag",
+            "__guid": "8a61fc82-8307-4295-9ecd-ce5cef29944c",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          },
+          {
+            "__type": "Sandbox.WorldPanel",
+            "__guid": "963768b5-eac5-4388-87d0-f10c81b039cb",
+            "__enabled": true,
+            "Flags": 0,
+            "HorizontalAlign": "Center",
+            "InteractionRange": 1000,
+            "LookAtCamera": true,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "PanelSize": "1024,1024",
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": true,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderScale": 2,
+            "VerticalAlign": "Center"
+          }
+        ],
+        "Children": []
+      }
+    ],
     "__properties": {
       "NetworkInterpolation": true,
       "TimeScale": 1,
